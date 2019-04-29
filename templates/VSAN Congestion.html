@@ -1,15 +1,104 @@
-{% extends 'common.html' %}
-{% block content %}
+<!DOCTYPE HTML >
+<html>
+
+<div class="lay">
+<head>
+
+    <!--- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Web Site Project - Common Layout</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- mobile specific metas
+   ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+     ================================================== -->
+    <link rel="stylesheet" href={{url_for('static',filename='css/default.css')}}>
+    <link rel="stylesheet" href={{url_for('static',filename='css/layout.css')}}>
+    <link rel="stylesheet" href={{url_for('static',filename='css/media-queries.css')}}>
+
+    <!-- Script
+    ================================================== -->
+    <script src="js/modernizr.js"></script>
+
+    <!-- Favicons
+     ================================================== -->
+    <link rel="shortcut icon" href={{url_for('static',filename='images/EMC.png')}} >
+
+</head>
+
+<body>
+
+<!-- Header
+================================================== -->
+<header id="top">
+
+    <div class="row">
+
+        <div class="header-content twelve columns">
+
+            <h1 id="logo-text"><a href="index.html" title="">Keep It Simple.</a></h1>
+            <p id="intro">Put your awesome slogan here...</p>
+
+        </div>
+
+    </div>
+
+    <nav id="nav-wrap">
+
+        <a class="mobile-btn" href="#nav-wrap" title="Show navigation">Show Menu</a>
+        <a class="mobile-btn" href="#" title="Hide navigation">Hide Menu</a>
+
+        <div class="row">
+
+            <ul id="nav" class="nav">
+                <li class="current"><a href="index.html">Home</a></li>
+                <li class="has-children"><a href="#">Dropdown</a>
+                    <ul>
+                        <li><a href="#">Submenu 01</a></li>
+                        <li><a href="#">Submenu 02</a></li>
+                        <li><a href="#">Submenu 03</a></li>
+                    </ul>
+                </li>
+                <li><a href={{ url_for('demo') }}>Demo</a></li>
+                <li><a href="archives.html">Archives</a></li>
+                <li class="has-children"><a href="single.html">Blog</a>
+                    <ul>
+                        <li><a href="blog.html">Blog Entries</a></li>
+                        <li><a href="single.html">Single Blog</a></li>
+                    </ul>
+                </li>
+                <li><a href="page.html">Page</a></li>
+            </ul> <!-- end #nav -->
+
+        </div>
+
+    </nav> <!-- end #nav-wrap -->
+
+</header> <!-- Header End -->
+
+
+
+</body>
+</div>
+
+<div class="lay">
+
+
+
    <div id="content-wrap">
 
       <div class="row section-head">
 
       	<div class="twelve columns">
 
-	         <h1>Style Guide.</h1>
+	         <h1><b>How to understand congestion on vSAN</b></h1>
 
-	         <p class="lead add-bottom">This is a test statment made by Srini.
-	         </p>
+	         <p class="lead add-bottom">	         </p>
 
          </div>                 
 
@@ -21,16 +110,55 @@
 
          <div class="six columns add-bottom">
 
-            <h3>Paragraph and Image</h3>
 
-            <p><a href="#"><img width="120" height="120" class="pull-left" alt="sample-image" src="images/sample-image.jpg"></a>
-  			   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec libero. Suspendisse bibendum.
-  			   Cras id urna. Morbi tincidunt, orci ac convallis aliquam, lectus turpis varius lorem, eu
-  			   posuere nunc justo tempus leo. Donec mattis, purus nec placerat bibendum, dui pede condimentum
-  			   odio, ac blandit ante orci ut diam. Cras fringilla magna. Phasellus suscipit, leo a pharetra
-  			   condimentum, lorem tellus eleifend magna, eget fringilla velit magna id neque.
-  			   posuere nunc justo tempus leo. </p>
+           
+<p><mark>WARNING:</mark>Ensure that you fully read and understand this article before taking any action. Also best practice should be to involve VMware ASAP with a S1 service request</p>
 
+            <p><mark>IMPORTANT:</mark> There is more than one possible explanation for all of the following behaviors. Encountering one or more of the following does not necessarily mean that a log leak has been encountered. If after encountering one of these behaviors you do not see extremely high log utilization, do not assume that you have hit a log leak.</p>
+			
+			<p> When the vSAN cache SSD encounters a log leak, the issue can manifest itself in a number of ways. One or more of the following behaviors may occur when this condition is encountered. These behaviors will occur when the underlying storage and network devices are healthy and normal. If there are also storage and network issues in the infrastructure, those must be resolved prior to determining if a log leak has been encountered </p>
+
+			
+			<p>Maximum congestion is frequently reported in vmkernel logs or the vobd log will report SSD congestion-threshold violations. This behavior may also manifest as congestion messaging, rapidly cycling between normal/violation levels.</p>
+			
+			
+			<p><strong>vmkernel log messaging example showing frequent congestion violations:</strong></br>
+			<i>Screenshot11</i>
+			</p>
+			
+			<p><strong>vobd messaging example showing frequent congestion violations:</strong></br>
+			<i>Screenshot12</i></p>
+			<p><strong>vmkernel log messaging example showing rapidly-cycling congestion messaging:</strong></br>
+			<i>Screenshot13</i></p>
+			
+			
+			<p><strong>vobd log messaging example showing rapidly-cycling congestion messaging:</strong></br>
+			<i>Screenshot14</i></p>
+			
+			
+<p>			
+	VMs residing on vSAN encounter extremely poor IO performance when physical disk performance is acceptable and all disks are online and available. </br>
+•	This can also result in Linux VMs residing on vSAN to go read-only.</br>
+	Objects that should be available (online mirror(s) and quorum rules are satisfied) fail to open due to I/O error and the ownerAbdicate process does not restore availability.</br>
+	Namespace objects that should be available (online mirror(s) and quorum rules are satisfied) fail to appear in the vSAN datastore</br>
+	Mounted/opened namespace objects have frequent VMFS heartbeat pulse-set errors or heartbeat timeouts.</br>
+•	This may also be associated with hosts entering a “not responding” state in vCenter.</p>
+<p><strong>vmkernel log heartbeat messaging:</strong></br>
+  
+<p>
+				Resync activity making no progress</br>
+	Objects associated with extremely slow IO handling or unexpected loss of availability share a dependency on the same disk group or subset of disk groups.</p>
+
+<h3>Why this happens:</h3>
+			
+			<p>When associated with a large buildup of cache SSD log volume, these symptoms are often due to a product flaw in vSAN that can cause log entries in the cache SSD to get stuck due to physical disk failure (early 5.5 releases), inability to process IO associated with a deleted/destroyed object or component, or other reasons. These stuck log entries can ultimately block the logs from draining.</p>
+			
+			<p>Over time, this log buildup will exhaust the defined logging capacity in the cache-tier SSD. When this occurs, the cache tier for the affected disk group will be unable to process inbound IO operations in a timely manner. This will cause a congestion condition to be raised and latency will be introduced to the inbound IO to allow the cache-tier SSD to catch up. As the log draining process is blocked, however, the logs never reduce and as a result the congestion and high effective latency to the final workload remain present and affect production. This condition will appear even if all underlying hardware (disks, controllers, etc.) are healthy and present as expected.</p>
+	<p>Once this problem is encountered, there is no patch at this time that will resolve the issue and permit the logs to drain successfully. If a cache-tier SSD log-buildup condition is encountered, there are two available work-arounds described in the "How to resolve" section. If at any time you are unsure of the steps involved in the workaround or you do not fully understand the consequences, engage VMware with a S1 escalation ASAP!</p>
+	
+	<h3>How to resolve:</h3>
+	<p>To improve IO performance when this issue is encountered, the offending disk group needs to be removed from the active IO path or other short-term measures need to be taken. By removing the offending disk group from the IO path, performance will improve and production will be restored.</p>
+	
             <p>A <a href="#">link</a>,
   			   <abbr title="this really isn't a very good description">abbrebation</abbr>,
   			   <strong>strong text</strong>,
@@ -43,24 +171,8 @@
 
          <div class="six columns add-bottom">
 
-            <h3>Drop Caps</h3>
-
-            <p class="drop-cap">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
-            there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the
-            Semantics, a large language ocean. A small river named Duden flows by their place and supplies
-            it with the necessary regelialia. Morbi tincidunt, orci ac convallis aliquam, lectus turpis varius lorem, eu
-  			   posuere nunc justo tempus leo. Donec mattis, purus nec placerat bibendum, dui pede condimentum
-  			   odio, ac blandit ante orci ut diam. Cras fringilla magna. Phasellus suscipit, leo a pharetra
-  			   condimentum, lorem tellus eleifend magna, eget fringilla velit magna id neque.
-  			   </p>
-
-            <h3>Small Print</h3>
-
-            <p>Buy one widget, get one free!
-  				<small>(While supplies last. Offer expires on the vernal equinox. Not valid in Ohio.)</small>
-  			   </p>
-
-         </div>
+            
+			 </div>
 
          <hr />
 
@@ -493,4 +605,5 @@
    <script>window.jQuery || document.write('<script src="js/jquery-1.10.2.min.js"><\/script>')</script>
    <script type="text/javascript" src="js/jquery-migrate-1.2.1.min.js"></script>  
    <script src="js/main.js"></script>
-{% endblock %}
+</div>
+</html>

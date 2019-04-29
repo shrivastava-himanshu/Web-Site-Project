@@ -1,15 +1,104 @@
-{% extends 'common.html' %}
-{% block content %}
+<!DOCTYPE HTML >
+<html>
+
+<div class="lay">
+<head>
+
+    <!--- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Web Site Project - Common Layout</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- mobile specific metas
+   ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+     ================================================== -->
+    <link rel="stylesheet" href={{url_for('static',filename='css/default.css')}}>
+    <link rel="stylesheet" href={{url_for('static',filename='css/layout.css')}}>
+    <link rel="stylesheet" href={{url_for('static',filename='css/media-queries.css')}}>
+
+    <!-- Script
+    ================================================== -->
+    <script src="js/modernizr.js"></script>
+
+    <!-- Favicons
+     ================================================== -->
+    <link rel="shortcut icon" href={{url_for('static',filename='images/EMC.png')}} >
+
+</head>
+
+<body>
+
+<!-- Header
+================================================== -->
+<header id="top">
+
+    <div class="row">
+
+        <div class="header-content twelve columns">
+
+            <h1 id="logo-text"><a href="index.html" title="">Keep It Simple.</a></h1>
+            <p id="intro">Put your awesome slogan here...</p>
+
+        </div>
+
+    </div>
+
+    <nav id="nav-wrap">
+
+        <a class="mobile-btn" href="#nav-wrap" title="Show navigation">Show Menu</a>
+        <a class="mobile-btn" href="#" title="Hide navigation">Hide Menu</a>
+
+        <div class="row">
+
+            <ul id="nav" class="nav">
+                <li class="current"><a href="index.html">Home</a></li>
+                <li class="has-children"><a href="#">Dropdown</a>
+                    <ul>
+                        <li><a href="#">Submenu 01</a></li>
+                        <li><a href="#">Submenu 02</a></li>
+                        <li><a href="#">Submenu 03</a></li>
+                    </ul>
+                </li>
+                <li><a href={{ url_for('demo') }}>Demo</a></li>
+                <li><a href="archives.html">Archives</a></li>
+                <li class="has-children"><a href="single.html">Blog</a>
+                    <ul>
+                        <li><a href="blog.html">Blog Entries</a></li>
+                        <li><a href="single.html">Single Blog</a></li>
+                    </ul>
+                </li>
+                <li><a href="page.html">Page</a></li>
+            </ul> <!-- end #nav -->
+
+        </div>
+
+    </nav> <!-- end #nav-wrap -->
+
+</header> <!-- Header End -->
+
+
+
+</body>
+</div>
+
+<div class="lay">
+
+
+
    <div id="content-wrap">
 
       <div class="row section-head">
 
       	<div class="twelve columns">
 
-	         <h1>Style Guide.</h1>
+	         <h1><b>vCenter and ESXi communication issues</b></h1>
 
-	         <p class="lead add-bottom">This is a test statment made by Srini.
-	         </p>
+	         <p class="lead add-bottom">	         </p>
 
          </div>                 
 
@@ -21,46 +110,71 @@
 
          <div class="six columns add-bottom">
 
-            <h3>Paragraph and Image</h3>
+            <h3>How to troubleshoot ESXi disconnects when hostd is running</h3>
 
-            <p><a href="#"><img width="120" height="120" class="pull-left" alt="sample-image" src="images/sample-image.jpg"></a>
-  			   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec libero. Suspendisse bibendum.
-  			   Cras id urna. Morbi tincidunt, orci ac convallis aliquam, lectus turpis varius lorem, eu
-  			   posuere nunc justo tempus leo. Donec mattis, purus nec placerat bibendum, dui pede condimentum
-  			   odio, ac blandit ante orci ut diam. Cras fringilla magna. Phasellus suscipit, leo a pharetra
-  			   condimentum, lorem tellus eleifend magna, eget fringilla velit magna id neque.
-  			   posuere nunc justo tempus leo. </p>
+            <p>
+There are a number of things that could be causing an ESXi host to be disconnected in vCenter.</br> 
+The first thing to do is to ping the vCenter from the ESXi host to ensure that they can communicate.</br>
+The ESXi uses UDP port 902 to maintain a connection with vCenter. Regular heartbeats are sent over this port to maintain a connection.</br>
+If a connection cannot be made over port 902 then the ESXi host will disconnect from vCenter. </br>
+There are multiple levels that this 902 issue could stem from.</br>
+The first one that I would look at is the vpxa.cfg file
+The vpxa.cfg file is located in /etc/vmware/vpxa.</br>
+If you open that file, you should see both the ServerPort and ServerIP entries at the bottom of the file.</br>
+These entries represent the communication port between the ESXi and vCenter as well as the vCenter IP address.</br>
+To open the file, type:<i>less /etc/vmware/vpxa/vpxa.cfg </i> </br>
+At the bottom of the file, you will find these entries. </br>
+<i>ServerPort</i> should be set to 902. </br>
+<i>ServerIP</i> should be the vCenter managed IP.</br>
+ 
+The managed IP should match the IP address returned from running ipconfig on the vCenter Machine Windows command line.</p>   
+<p>After verifying that the ServerIP is set correctly in the vpxa.cfg file, please ensure that port 902 is referenced in vpxa.cfg.</br>
+If ServerPort is blank, or it is showing a -1 or 922 value then please change it to 902.</br>
 
-            <p>A <a href="#">link</a>,
-  			   <abbr title="this really isn't a very good description">abbrebation</abbr>,
-  			   <strong>strong text</strong>,
-            <em>em text</em>,
-  			   <del>deleted text</del>, and
-            <mark>this is a mark text.</mark>
-          	</p>
+The next thing that we will need to do is verify that the correct vCenter IP is showing on the hosts file.</br>
+Location is /etc/hosts.To view it, type less /etc/hosts.</br>
+This should have an entry for the vCenter IP, vCenter short name and vCenter Fully Qualified Domain Name.</br>
+Ensure that all are correct.</p>
+<p>After doing this, if you are connecting the host to vCenter using Hostname or FQDN, please ensure that the host is resolvable by DNS.</br>
+To check this, log on to a windows machine in the same domain and open a command prompt.</br>
+ 
+Type all of the following combinations to ensure that the ESXi host is fully resolvable:</br>
+<i>nslookup HOSTNAME</i></br>
+<i>nslookup FQDN</i></br>
+<i>nslookup IP</i> </br>
+If it is not resolving,  then customer will need to resolve the DNS issues internally.</p>
 
-         </div>
+<p>If all of the above steps have been completed and the host is now fully resolvable, please attempt to reconnect the ESXi host to vCenter using the FQDN.</br>
+The issue may be resolved due to the changes we have made to /etc/vmware/vpxa/vpxa.cfg,  /etc/hosts or the DNS changes. This is depending on how many if not all of the above were misconfigured.</p>
+<p>If we still cannot connect, the issue may well be related to port 902 on the physical switch.</br>
+They may have a firewall blocking it on the switch.</br>
+You can check to see if port 902 is blocked from the Vmware end by logging on to a direct connection to the ESXi host through the vSphere Client.</br>
+Click on the ESXi host icon in the left pane > Configuration > Security Profile > Firewall</br>
+Look through the Firewall settings and verify whether or not all of the boxes are checked which reference port 902.</br>
+If traffic is enabled on UDP 902 (UDP 902 box above is ticked), then it is up to the customer to find what is blocking UDP 902.</br>
+To prove that this issue is related to 902, ask the customer to run Wireshark tests between the problematic host and the vCenter.</br>
+If it is a VCSA, the customer can test the following command to make sure that 902 is open to the Host:</br>
 
-         <div class="six columns add-bottom">
+<i>curl –v telnet://ESXI-IP:902</i> </br>
+If the customer has a Windows vCenter, they can install Wireshark on the vCenter machine and perform these tests.</br?
+<p><a href="https://kb.vmware.com/s/article/1029919">Ref this link for more info </a> </p>
 
-            <h3>Drop Caps</h3>
+<p>
+From the ESXi host, we can run:</br>
+<i>nc –z  vcenter-ip 902</i> </br>
 
-            <p class="drop-cap">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
-            there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the
-            Semantics, a large language ocean. A small river named Duden flows by their place and supplies
-            it with the necessary regelialia. Morbi tincidunt, orci ac convallis aliquam, lectus turpis varius lorem, eu
-  			   posuere nunc justo tempus leo. Donec mattis, purus nec placerat bibendum, dui pede condimentum
-  			   odio, ac blandit ante orci ut diam. Cras fringilla magna. Phasellus suscipit, leo a pharetra
-  			   condimentum, lorem tellus eleifend magna, eget fringilla velit magna id neque.
-  			   </p>
+After this issue is resolved, the host should connect if UDP 902 is the culprit.</p>
 
-            <h3>Small Print</h3>
+<p>There are also other scenarios which would prevent ESXi hosts from connecting.</br>
+Another common scenario would only apply if all hosts are disconnected from vCenter but you can still access them directly through the vSphere Client.
+This will have happened if vCenter was re-installed after renaming the SSL folders.</br>
+We could also see a situation whereby a host has lost its synchronization with vCenter.</br>
+As a result, the ESXi hosts will have lost their SSL trust with vCenter and that will need to be re-established.</br>
+ 
+To do this, attempt to connect the hosts one by one and when they fail, simply enter the root credentials again to connect.
+This is needed to update the root password entry in vCenter.</P>
 
-            <p>Buy one widget, get one free!
-  				<small>(While supplies last. Offer expires on the vernal equinox. Not valid in Ohio.)</small>
-  			   </p>
-
-         </div>
+			 </div>
 
          <hr />
 
@@ -493,4 +607,5 @@
    <script>window.jQuery || document.write('<script src="js/jquery-1.10.2.min.js"><\/script>')</script>
    <script type="text/javascript" src="js/jquery-migrate-1.2.1.min.js"></script>  
    <script src="js/main.js"></script>
-{% endblock %}
+</div>
+</html>

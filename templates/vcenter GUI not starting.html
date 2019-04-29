@@ -1,15 +1,104 @@
-{% extends 'common.html' %}
-{% block content %}
+<!DOCTYPE HTML >
+<html>
+
+<div class="lay">
+<head>
+
+    <!--- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Web Site Project - Common Layout</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- mobile specific metas
+   ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+     ================================================== -->
+    <link rel="stylesheet" href={{url_for('static',filename='css/default.css')}}>
+    <link rel="stylesheet" href={{url_for('static',filename='css/layout.css')}}>
+    <link rel="stylesheet" href={{url_for('static',filename='css/media-queries.css')}}>
+
+    <!-- Script
+    ================================================== -->
+    <script src="js/modernizr.js"></script>
+
+    <!-- Favicons
+     ================================================== -->
+    <link rel="shortcut icon" href={{url_for('static',filename='images/EMC.png')}} >
+
+</head>
+
+<body>
+
+<!-- Header
+================================================== -->
+<header id="top">
+
+    <div class="row">
+
+        <div class="header-content twelve columns">
+
+            <h1 id="logo-text"><a href="index.html" title="">Keep It Simple.</a></h1>
+            <p id="intro">Put your awesome slogan here...</p>
+
+        </div>
+
+    </div>
+
+    <nav id="nav-wrap">
+
+        <a class="mobile-btn" href="#nav-wrap" title="Show navigation">Show Menu</a>
+        <a class="mobile-btn" href="#" title="Hide navigation">Hide Menu</a>
+
+        <div class="row">
+
+            <ul id="nav" class="nav">
+                <li class="current"><a href="index.html">Home</a></li>
+                <li class="has-children"><a href="#">Dropdown</a>
+                    <ul>
+                        <li><a href="#">Submenu 01</a></li>
+                        <li><a href="#">Submenu 02</a></li>
+                        <li><a href="#">Submenu 03</a></li>
+                    </ul>
+                </li>
+                <li><a href={{ url_for('demo') }}>Demo</a></li>
+                <li><a href="archives.html">Archives</a></li>
+                <li class="has-children"><a href="single.html">Blog</a>
+                    <ul>
+                        <li><a href="blog.html">Blog Entries</a></li>
+                        <li><a href="single.html">Single Blog</a></li>
+                    </ul>
+                </li>
+                <li><a href="page.html">Page</a></li>
+            </ul> <!-- end #nav -->
+
+        </div>
+
+    </nav> <!-- end #nav-wrap -->
+
+</header> <!-- Header End -->
+
+
+
+</body>
+</div>
+
+<div class="lay">
+
+
+
    <div id="content-wrap">
 
       <div class="row section-head">
 
       	<div class="twelve columns">
 
-	         <h1>Style Guide.</h1>
+	         <h1><b>vCenter not starting.</b></h1>
 
-	         <p class="lead add-bottom">This is a test statment made by Srini.
-	         </p>
+	         <p class="lead add-bottom">	         </p>
 
          </div>                 
 
@@ -21,46 +110,46 @@
 
          <div class="six columns add-bottom">
 
-            <h3>Paragraph and Image</h3>
+            <h3>vCenter not starting due to /storage/log filling up</h3>
 
-            <p><a href="#"><img width="120" height="120" class="pull-left" alt="sample-image" src="images/sample-image.jpg"></a>
-  			   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec libero. Suspendisse bibendum.
-  			   Cras id urna. Morbi tincidunt, orci ac convallis aliquam, lectus turpis varius lorem, eu
-  			   posuere nunc justo tempus leo. Donec mattis, purus nec placerat bibendum, dui pede condimentum
-  			   odio, ac blandit ante orci ut diam. Cras fringilla magna. Phasellus suscipit, leo a pharetra
-  			   condimentum, lorem tellus eleifend magna, eget fringilla velit magna id neque.
-  			   posuere nunc justo tempus leo. </p>
+            <p>
+  			  The vCenter Server Appliance services fail to start.Running df -h on the vCenter Server Appliance shows /storage/log as full.</p>
+		  
+			   <p>vCenter Server Appliance critical health alert, specifically, ‘The /storage/log filesystem is out of disk space or inodes’. This error is usually due to a failed automated log clean-up process. In this we will discuss couple of steps to address this kind of scenario</p>
+			   
+			   <h3>screenshot06</h3>
+ 
+<p>Firstly, let’s take a look at the file  system itself in order to confirm our UI findings. SSH onto the VCSA appliance and enter BASH, then list all available file systems via the df -h command. From the below screenshot the UI warning has been confirmed, specifically, the file system in question has been completely consumed.</p>
 
-            <p>A <a href="#">link</a>,
-  			   <abbr title="this really isn't a very good description">abbrebation</abbr>,
-  			   <strong>strong text</strong>,
-            <em>em text</em>,
-  			   <del>deleted text</del>, and
-            <mark>this is a mark text.</mark>
-          	</p>
+<h3>screenshot07</h3>
 
-         </div>
+<h3>Temporary Fix<h3>
+<p>In the unfortunate event that this issue is preventing you from accessing vCenter, we can implement a quick fix by extending the affected disk. Note, this is a quick fix only and should be implemented to restore vCenter access only. This should not be relied on as a permanent resolution.</p>
+<p>As we have already identified the problematic disk, jump over to the vSphere client and extend the disk in question (you call by how much, but in my environment, I’ve added an additional 5 GB). This leaves us the final task of initiating the extension and enabling the VCSA to see the additional space. Depending on your VCSA version, there are two options:</p>
 
-         <div class="six columns add-bottom">
+<h3>screenshot08</h3>
+<h2>VCSA v6.0</h2>
+<i>vpxd_servicecfg storage lvm autogrow</i>
+<h2>VCSA v6.5 and v6.7</h2>
+<i>/usr/lib/applmgmt/support/scripts/autogrow.sh</i>
 
-            <h3>Drop Caps</h3>
+<p>Lastly, list all file systems to confirm the extension has been realised.</p>
+<h3>Permanent Fix<h3>
+<p>So, we’re out of jail, but we still have an offending consumer. In my instance, checking within the file system identified a number of large log files. These hadn’t been cleared automatically by the VCSA so a manual intervention was required. Specifically, the removal of localhost_access_log, vmware-identity-sts, and vmware-identity-sts-perf logs was required. These can be removed via the below command.</p>
+<i>rm log-file-name.*</i>
+<h3>screenshot09</h3>
+<p>Following the removal, another df -h show’s we’re back in business.</p>
+<h3>screenshot10</h3>
 
-            <p class="drop-cap">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
-            there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the
-            Semantics, a large language ocean. A small river named Duden flows by their place and supplies
-            it with the necessary regelialia. Morbi tincidunt, orci ac convallis aliquam, lectus turpis varius lorem, eu
-  			   posuere nunc justo tempus leo. Donec mattis, purus nec placerat bibendum, dui pede condimentum
-  			   odio, ac blandit ante orci ut diam. Cras fringilla magna. Phasellus suscipit, leo a pharetra
-  			   condimentum, lorem tellus eleifend magna, eget fringilla velit magna id neque.
-  			   </p>
+<p>Lastly, and in this instance, restart the Security Token Service to initiate the creation of new log files.</p>
+<i>service vmware-stsd restart</i>
 
-            <h3>Small Print</h3>
 
-            <p>Buy one widget, get one free!
-  				<small>(While supplies last. Offer expires on the vernal equinox. Not valid in Ohio.)</small>
-  			   </p>
 
-         </div>
+            <p><a href="VMware KB article 2143565,">Ref this link for more details</a>
+			
+  			  
+			 </div>
 
          <hr />
 
@@ -493,4 +582,5 @@
    <script>window.jQuery || document.write('<script src="js/jquery-1.10.2.min.js"><\/script>')</script>
    <script type="text/javascript" src="js/jquery-migrate-1.2.1.min.js"></script>  
    <script src="js/main.js"></script>
-{% endblock %}
+</div>
+</html>

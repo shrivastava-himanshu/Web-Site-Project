@@ -1,15 +1,104 @@
-{% extends 'common.html' %}
-{% block content %}
+<!DOCTYPE HTML >
+<html>
+
+<div class="lay">
+<head>
+
+    <!--- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Web Site Project - Common Layout</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- mobile specific metas
+   ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+     ================================================== -->
+    <link rel="stylesheet" href={{url_for('static',filename='css/default.css')}}>
+    <link rel="stylesheet" href={{url_for('static',filename='css/layout.css')}}>
+    <link rel="stylesheet" href={{url_for('static',filename='css/media-queries.css')}}>
+
+    <!-- Script
+    ================================================== -->
+    <script src="js/modernizr.js"></script>
+
+    <!-- Favicons
+     ================================================== -->
+    <link rel="shortcut icon" href={{url_for('static',filename='images/EMC.png')}} >
+
+</head>
+
+<body>
+
+<!-- Header
+================================================== -->
+<header id="top">
+
+    <div class="row">
+
+        <div class="header-content twelve columns">
+
+            <h1 id="logo-text"><a href="index.html" title="">Keep It Simple.</a></h1>
+            <p id="intro">Put your awesome slogan here...</p>
+
+        </div>
+
+    </div>
+
+    <nav id="nav-wrap">
+
+        <a class="mobile-btn" href="#nav-wrap" title="Show navigation">Show Menu</a>
+        <a class="mobile-btn" href="#" title="Hide navigation">Hide Menu</a>
+
+        <div class="row">
+
+            <ul id="nav" class="nav">
+                <li class="current"><a href="index.html">Home</a></li>
+                <li class="has-children"><a href="#">Dropdown</a>
+                    <ul>
+                        <li><a href="#">Submenu 01</a></li>
+                        <li><a href="#">Submenu 02</a></li>
+                        <li><a href="#">Submenu 03</a></li>
+                    </ul>
+                </li>
+                <li><a href={{ url_for('demo') }}>Demo</a></li>
+                <li><a href="archives.html">Archives</a></li>
+                <li class="has-children"><a href="single.html">Blog</a>
+                    <ul>
+                        <li><a href="blog.html">Blog Entries</a></li>
+                        <li><a href="single.html">Single Blog</a></li>
+                    </ul>
+                </li>
+                <li><a href="page.html">Page</a></li>
+            </ul> <!-- end #nav -->
+
+        </div>
+
+    </nav> <!-- end #nav-wrap -->
+
+</header> <!-- Header End -->
+
+
+
+</body>
+</div>
+
+<div class="lay">
+
+
+
    <div id="content-wrap">
 
       <div class="row section-head">
 
       	<div class="twelve columns">
 
-	         <h1>Style Guide.</h1>
+	         <h1><b>Hostd issues</b></h1>
 
-	         <p class="lead add-bottom">This is a test statment made by Srini.
-	         </p>
+	         <p class="lead add-bottom">	         </p>
 
          </div>                 
 
@@ -21,46 +110,98 @@
 
          <div class="six columns add-bottom">
 
-            <h3>Paragraph and Image</h3>
+            <h3>Methods to troubleshoot Hostd issues </h3>
 
-            <p><a href="#"><img width="120" height="120" class="pull-left" alt="sample-image" src="images/sample-image.jpg"></a>
-  			   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec libero. Suspendisse bibendum.
-  			   Cras id urna. Morbi tincidunt, orci ac convallis aliquam, lectus turpis varius lorem, eu
-  			   posuere nunc justo tempus leo. Donec mattis, purus nec placerat bibendum, dui pede condimentum
-  			   odio, ac blandit ante orci ut diam. Cras fringilla magna. Phasellus suscipit, leo a pharetra
-  			   condimentum, lorem tellus eleifend magna, eget fringilla velit magna id neque.
-  			   posuere nunc justo tempus leo. </p>
+            <p>In this we will discuss about ESXi not responding in vCenter and also inaccessible via direct Client connection(vSphere Client 6/vSphere Web Client 6.5) :</p>
+			   
+			   <p>
+  			   In this scenario, if the ESXi host is pingable over the management network, the most likely cause would be an issue with the 'hostd' daemon on the ESXi host which in turn can also cause issues with the 'vpxa' agent. </br>
+The hostd daemon is responsible for handling all kernel related activities and tasks on the ESXi hosts. It leverages vpxa (vCenter agent) to get information to and from vpxd (vCenter daemon) depending on where the task request was initiated from.</br>
+The vpxa agent is the agent responsible for communication between the ESXi host and vCenter. It is installed on the ESXi host and is a kind of a middle man between hostd and vpxd. </br>
+vCenter related tasks (e.g. cluster related tasks initiated from vCenter) are passed on from vpxd on the vCenter machine on to vpxa and then on to hostd which are both on the ESXi host.</br>
+To check the status of hostd, log onto a putty session to the ESXi host in question and type '/etc/init.d/hostd status'</br>
+This will return either 'Hostd is running' OR 'Hostd is not running'</p>
+<p>Hostd could also appear to be running but could be unstable.
+If hostd is showing as running, it may still be alternating between being responsive and unresponsive.</br>
+To check whether or not hostd is unstable, type the following command: </br>
+&#35; grep &#45;i hostd &#47;var&#47;log&#47;vmkernel.log | less</br>
+ The above command will show 'Hostd is detected as being unresponsive' if this is the case.</br>
+If you have no access to SSH, you can connect through iDRAC or BMC and press Alt + F11.</br>
+This will also show 'Hostd is detected as being unresponsive' </p>
 
-            <p>A <a href="#">link</a>,
-  			   <abbr title="this really isn't a very good description">abbrebation</abbr>,
-  			   <strong>strong text</strong>,
-            <em>em text</em>,
-  			   <del>deleted text</del>, and
-            <mark>this is a mark text.</mark>
-          	</p>
+<p>The most likely cause of the hostd daemon becoming unstable or dead would be due to communication issues with the storage or memory issues. It can also be caused by code issues or bugs in the system.</br>
+You may also find dump files in /var/core/ or /var/log/</br>
+If there are zdump files present, please gather a log bundle and engage VMware Support as we have the tools available to analyse these dump files.</br>
+ 
+When hostd is affected, it is quite a difficult situation to recover from.</br>
+Usually the only way of truly recovering from this issue is to Reboot the ESXi host.</br>
+(This will not permanently resolve the issue, it will just temporarily clear the symptoms until the underlying issue is rectified) </p>
+<p> But there are a few things that you can try.To check if there is a process running for hostd, type the following command on the ESXi command line:</br>
+<i>'ps | grep hostd'</i></br> 
+This will show you the running process id for hostd </p>
 
-         </div>
+ <p> screenshot-03 </p>
+ 
+ <p>You can attempt to kill this process by typing:</br>
+<i>&#35;kill -9 PID </i>(with PID being the process ID returned on the right from the above command *34265*)</br>
+ 
+The above command can be run from any directory.</br>
+You can try the kill -9 command against all of the process IDs returned to try to rid of the process</br>
+This may spawn a new PID for hostd and its sub-processes and temporarily relieve the host of the issue.</br>
+ 
+This above will not permanently fix this, and if storage/memory/code issues are the problem, then the underlying issue will need to be addressed.</br>
+The vmkernel.log, located in /var/log/ on a putty session to the ESXi host, will constantly log error messages if there is a significant issue.</br>
+As a result, the vmkernel.log will flood. This, in turn, will put pressure on the hostd daemon causing it to become unstable or stop completely.</br>
+You can verify whether or not the customer is experiencing these issues by checking the vmkernel.log</br>
+ 
+To do this, simply type:</br>
+<i>'less /var/log/vmkernel.log'</i>
+ 
+<p>Once the issue with the storage had been rectified or the hostd daemon has been returned to a stable state, then the host should be able to connect.</br>
+If you are unable to kill the PID of hostd, then you may need to try the following KB:</br>
+ <p><a href="https://kb.vmware.com/kb/1007261">Hostd not responding</a> </p>
 
-         <div class="six columns add-bottom">
+As mentioned in the above kb, if these do not kill the process then a reboot is the only option. </br>
+Before rebooting, gather logs and engage VMware support as we have additional resources available to us such as VMware Engineering and dump decoders which will require logs.You will also need to enter maintenance mode before trying to reboot.  To do this, type the following from the command line: </br>
+<i>&#35;localcli system maintenanceMode set -e true -m ensureObjectAccessibility </i>
+(esxcli is not functional when there are hostd issues)</br>
 
-            <h3>Drop Caps</h3>
+Do not reboot the host if the host is not in maintenance mode.
+Lets say the host that has issues is cs-vxrail-e2.</br>
 
-            <p class="drop-cap">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
-            there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the
-            Semantics, a large language ocean. A small river named Duden flows by their place and supplies
-            it with the necessary regelialia. Morbi tincidunt, orci ac convallis aliquam, lectus turpis varius lorem, eu
-  			   posuere nunc justo tempus leo. Donec mattis, purus nec placerat bibendum, dui pede condimentum
-  			   odio, ac blandit ante orci ut diam. Cras fringilla magna. Phasellus suscipit, leo a pharetra
-  			   condimentum, lorem tellus eleifend magna, eget fringilla velit magna id neque.
-  			   </p>
+I can check which UUID corresponds to this host in CMMDS with the below command:</br>
+<i>&#35;cmmds-tool find –t HOSTNAME –f json</i> </p>
+<p> screenshot-04 </p>
 
-            <h3>Small Print</h3>
+<p>This will help me to verify the maintenance mode state.</br>
+You can check with the following command:</br>
+<i>&#35;cmmds-tool find –t NODE_DECOM_STATE –f json</i></p>
+<p> screenshot-05 </p>
 
-            <p>Buy one widget, get one free!
-  				<small>(While supplies last. Offer expires on the vernal equinox. Not valid in Ohio.)</small>
-  			   </p>
 
-         </div>
+<p>As we can see above the UUID for host 2 has the following decom info:</br>
+decomState": 6, "decomJobType": 1</br>
+Whereas the others all have:</br>
+decomState": 0, "decomJobType": 0</br>
+
+The decom numbers here represents as follows:</p>
+<h3>decomState </h3>
+<p>0 &#61; None - the node is not decommissioned </br>
+1 &#61; The decommissioning process has been started </br>
+3 &#61; The decommissioning process is underway</br>
+6 &#61; The node has been decommissioned </p>
+
+<h3>decomJobType</h3>
+<p>0 &#61; The node has been decommissioned in the "No Data Migration" mode.</br>
+1 &#61; The node has been decommissioned in the "Ensure Accessibility" mode.</br>
+2 &#61; The node has been decommissioned in the "Full Data Migration" mode. </p>
+
+<p>
+If the host is not in state 6,  you can monitor the progress of the task if it is in state 3 with the above command in the ‘progress’ section. 
+If the task fails outright or does gets stuck on a certain percentage for a prolonged period, do not reboot and please engage VMware.</p>
+
+
+			 </div>
 
          <hr />
 
@@ -493,4 +634,5 @@
    <script>window.jQuery || document.write('<script src="js/jquery-1.10.2.min.js"><\/script>')</script>
    <script type="text/javascript" src="js/jquery-migrate-1.2.1.min.js"></script>  
    <script src="js/main.js"></script>
-{% endblock %}
+</div>
+</html>

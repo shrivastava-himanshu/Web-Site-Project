@@ -1,15 +1,104 @@
-{% extends 'common.html' %}
-{% block content %}
+<!DOCTYPE HTML >
+<html>
+
+<div class="lay">
+<head>
+
+    <!--- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Web Site Project - Common Layout</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- mobile specific metas
+   ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+     ================================================== -->
+    <link rel="stylesheet" href={{url_for('static',filename='css/default.css')}}>
+    <link rel="stylesheet" href={{url_for('static',filename='css/layout.css')}}>
+    <link rel="stylesheet" href={{url_for('static',filename='css/media-queries.css')}}>
+
+    <!-- Script
+    ================================================== -->
+    <script src="js/modernizr.js"></script>
+
+    <!-- Favicons
+     ================================================== -->
+    <link rel="shortcut icon" href={{url_for('static',filename='images/EMC.png')}} >
+
+</head>
+
+<body>
+
+<!-- Header
+================================================== -->
+<header id="top">
+
+    <div class="row">
+
+        <div class="header-content twelve columns">
+
+            <h1 id="logo-text"><a href="index.html" title="">Keep It Simple.</a></h1>
+            <p id="intro">Put your awesome slogan here...</p>
+
+        </div>
+
+    </div>
+
+    <nav id="nav-wrap">
+
+        <a class="mobile-btn" href="#nav-wrap" title="Show navigation">Show Menu</a>
+        <a class="mobile-btn" href="#" title="Hide navigation">Hide Menu</a>
+
+        <div class="row">
+
+            <ul id="nav" class="nav">
+                <li class="current"><a href="index.html">Home</a></li>
+                <li class="has-children"><a href="#">Dropdown</a>
+                    <ul>
+                        <li><a href="#">Submenu 01</a></li>
+                        <li><a href="#">Submenu 02</a></li>
+                        <li><a href="#">Submenu 03</a></li>
+                    </ul>
+                </li>
+                <li><a href={{ url_for('demo') }}>Demo</a></li>
+                <li><a href="archives.html">Archives</a></li>
+                <li class="has-children"><a href="single.html">Blog</a>
+                    <ul>
+                        <li><a href="blog.html">Blog Entries</a></li>
+                        <li><a href="single.html">Single Blog</a></li>
+                    </ul>
+                </li>
+                <li><a href="page.html">Page</a></li>
+            </ul> <!-- end #nav -->
+
+        </div>
+
+    </nav> <!-- end #nav-wrap -->
+
+</header> <!-- Header End -->
+
+
+
+</body>
+</div>
+
+<div class="lay">
+
+
+
    <div id="content-wrap">
 
       <div class="row section-head">
 
       	<div class="twelve columns">
 
-	         <h1>Style Guide.</h1>
+	         <h1><b>Owner Abdication Explained</b></h1>
 
-	         <p class="lead add-bottom">This is a test statment made by Srini.
-	         </p>
+	         <p class="lead add-bottom">	         </p>
 
          </div>                 
 
@@ -21,15 +110,13 @@
 
          <div class="six columns add-bottom">
 
-            <h3>Paragraph and Image</h3>
+            <h3>What is owner abdication?</h3>
 
-            <p><a href="#"><img width="120" height="120" class="pull-left" alt="sample-image" src="images/sample-image.jpg"></a>
-  			   Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec libero. Suspendisse bibendum.
-  			   Cras id urna. Morbi tincidunt, orci ac convallis aliquam, lectus turpis varius lorem, eu
-  			   posuere nunc justo tempus leo. Donec mattis, purus nec placerat bibendum, dui pede condimentum
-  			   odio, ac blandit ante orci ut diam. Cras fringilla magna. Phasellus suscipit, leo a pharetra
-  			   condimentum, lorem tellus eleifend magna, eget fringilla velit magna id neque.
-  			   posuere nunc justo tempus leo. </p>
+            <p>
+  			   If there are indications that the data should be available (like other components on the same disks are available and working for other objects), we can force DOM to refresh component states by instructing the object owner to surrender its ownership of the object </p>
+			   
+			   <p>
+  			   When the DOM owner releases its ownership claim another node in the VSAN cluster will assume the ownership role for the object. When the object ownership moves to a new node, the component states will be refreshed. If the previously absent components are actually available, the new owner will detect the true state of the underlying components when it initializes its ownership role. </p>
 
             <p>A <a href="#">link</a>,
   			   <abbr title="this really isn't a very good description">abbrebation</abbr>,
@@ -43,24 +130,42 @@
 
          <div class="six columns add-bottom">
 
-            <h3>Drop Caps</h3>
+            <h3>How do we force owner abdication?</h3>
 
-            <p class="drop-cap">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
-            there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the
-            Semantics, a large language ocean. A small river named Duden flows by their place and supplies
-            it with the necessary regelialia. Morbi tincidunt, orci ac convallis aliquam, lectus turpis varius lorem, eu
-  			   posuere nunc justo tempus leo. Donec mattis, purus nec placerat bibendum, dui pede condimentum
-  			   odio, ac blandit ante orci ut diam. Cras fringilla magna. Phasellus suscipit, leo a pharetra
-  			   condimentum, lorem tellus eleifend magna, eget fringilla velit magna id neque.
+            <p> There are a couple ways to accomplish owner abdication. Ultimately when we perform an owner abdication we are trying to refresh the state of a component to force it become active. The first and easiest method to accomplish this is from the RVC. You are probably already familiar with the vsan.check_state command that will list all the objects that are currently inaccessible or orphaned on the datastore. If you use the –r (refresh) option with the vsan.check_state command, it will force all VSAN hosts to refresh the state of their objects. 
   			   </p>
 
-            <h3>Small Print</h3>
-
-            <p>Buy one widget, get one free!
-  				<small>(While supplies last. Offer expires on the vernal equinox. Not valid in Ohio.)</small>
+            <h3>Example:</h3>
+			<p><i> vsan.check_state . -r </i>
   			   </p>
 
-         </div>
+			<p> RVC Command Reference Guide for Virtual SAN:</p>
+<p> <a href="https://www.vmware.com/content/dam/digitalmarketing/vmware/en/pdf/products/vsan/vmware-ruby-vsphere-console-command-reference-for-virtual-san.pdf ">VSAN vsphere Console Commands</a>
+
+            <p>The second way to try and change an object/component’s state is by performing owner abdication against a host. We will need to SSH to a one of VSAN hosts to first identify which host owns the object, and then SSH to the host that is the owner to force it to abdicate.</p>
+			
+			<p>1.	To force the DOM owner to surrender ownership of the component, we must first find the current DOM owner of the object. This step requires you to know the object UUID for the unavailable object.  You can get the object UUID from the vsan.check_state command as it will listed the inaccessible objects. If vCenter/RVC is unavailable then you can use the DOM_tool with the –cs option to list the inaccessible objects on the datastore. We can get the object ownership information from cmmds-tool which can be run from any VSAN hosts.</br># cmmds-tool find -t DOM_OBJECT -f json -u <object_uuid> |head </p>
+			
+			<h4>Example</h4>
+			
+			<p> screenshot-01 </p>
+			
+			 
+			 <p>2.	Once you have identified the owner UUID (highlighted in the above example), determine which host is associated with that UUID. We can find the hostname using cmmds-tool.</br>
+# cmmds-tool find -t HOSTNAME -f json -u <owner uuid> |grep content
+
+			<h4>For Example</h4>
+			
+			 <p> screenshot-02 </p>
+
+<p>3.	Once you have identified the host that owns the DOM object, log into that ESXi host via SSH. From the ESXi host, we can run the ownerAbdicate.</br> This is executed via vsish.
+# vsish -e set /vmkModules/vsan/dom/ownerAbdicate <object uuid> </br>
+4.	This command will return no output. This is expected and normal behavior.</br>
+5.	Wait a few seconds and then rerun the command in step 1. You should see that the "owner" field has changed to a different host.</br>
+6.	Determine if the object has regained accessibility.</br>
+	Typically if the vsan.check_state –r does not correct the issue then it is likely the vsish will not either. With that said these do perform two different functions. The check_state command forces a refresh of the components whereas vsish forces the host to abdicate or renounce its ownership, so it may be worthwhile to try both. There are many situations where one of the inaccessible objects is the vCenter server so you would be limited to vsish. </p>
+
+			 </div>
 
          <hr />
 
@@ -493,4 +598,5 @@
    <script>window.jQuery || document.write('<script src="js/jquery-1.10.2.min.js"><\/script>')</script>
    <script type="text/javascript" src="js/jquery-migrate-1.2.1.min.js"></script>  
    <script src="js/main.js"></script>
-{% endblock %}
+</div>
+</html>
